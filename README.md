@@ -1,100 +1,132 @@
-load.js
-=======
+# Load.js
 
 JavaScript js/css, jsonp/ajax, sync/async loader
 
+This lib gives you full control on loading scripts and css files for your web application. Instead of having bunches of "script" and "link" tags in your HTML page, you define them all in one place.
+
+Another advantage is asynchronous loading, that means your scripts can be loaded in parallel, and also your app will not freeze while loading them.
+
+To gain even more control, define which scripts should be loaded before others in order to fulfill dependencies - this part is done in a really smart and easy way.
+
+Just include load.js script into your page to get started. Below you will find examples of usage as well as full API.
+
+
 ## Usage
 
-	<script type="text/javascript" src="load.js" data-load="js/app"></script>
+Imagine you have a very simple app structure like this:
 
-This will load the script and automatically will load js/app.js after initialization.
-"js/" in this case becomes the root path for all future loadings.
+	-- app
+	    |
+	    -- custom.css
+	    -- general.css
+	    -- init.js      assets load and init
+	    -- main.js      main app file
+	    -- module.js    some app module
+	    -- plugin.js    plugin, has to be loaded only after main.js and module.js
+	|
+	-- load.js
 
+So here you have "load.js" in the root, as well as "app" folder, inside it there are few "css" and "js" files.
 
-Then inside app.js you would load all other scripts and CSS files that you need.
+In order to get started, include "load.js" script into your page, please note special "data-load" attribute:
 
-	load.js('model.js');
+	<script type="text/javascript" src="load.js" data-load="app/init"></script>
 
+This will automatically load "app/init.js" file, which will be used to load all other assets.
 
-You can ommit ".js"	at the end:
+Important that "app/" in this case becomes the root path for all the future loadings, so you can omit it.
 
-	load.js('view');
+Then inside init.js you would load all other scripts and CSS files that you need.
 
+	load.js('main.js');
+
+You can omit ".js" at the end:
+
+	load.js('main');
 
 You can use shorthand to make it even more neat:
 
-	load('controller');
+	load('main');
 
 Methods chaining:
 
-	load.js('model').js('view').js('controller');
-
+	load.js('main').js('module');
 
 The same as:
 
-	load('model', 'view', 'controller');
-
+	load('main', 'module');
 
 Load CSS files (general.css and custom.css):
 
 	load.css('general.css').css('custom');
 
+Load all together:
 
-Load alltogether:
-
-	load.js('model').css('general', 'custom');
-
-
-### Callbacks
-
-You can specify a callback for evey load.js call:
-
-	load('model', function() {
-		// model.js is loaded
-	});
-
-
-Also there is general callback for all loadings called "ready".
-It has an argument with loaded path:
-
-	load.ready = function(path) {
-		// when model.js is loaded, path contains "model"
-		// when style.css is loaded, path contains "style.css"
-	};
-	load('model');
-	load('style.css');
+	load.js('main', 'module').css('general', 'custom');
 
 
 ### Priority loading
 
-Sometimes you need some scripts to be loaded only after another ones.
-This is easy to do with load.js - just put priority scripts into an array:
+Examples above will not probably work if some of your scripts have to be loaded before others. Because of the nature of asynchronous loading, there is no guarantee for loading order. To handle that you have to use priority loading.
 
-	load(['a', 'b'], 'c');
+For example, you need to have "main.js" and "module.js" loaded in order to load "plugin.js". This is easy to do with load.js - just put priority scripts into an array:
+
+	load(['main', 'module'], 'plugin');
+
+In this case "plugin.js" will be loaded only after "main.js" and "module.js" are loaded.
+
+You can make it even more sophisticated, imagine you have to load module.js only after main.js:
+
+	load(['main'], ['module'], 'plugin')
+
+That means load "main.js", then load "module.js", and only after that load "plugin.js".
+
+You don't need to use priority loading for css files, just define them in desired order.
 
 
-In this case script "c.js" will be loaded only after "a.js" and "b.js" are loaded.
+### Callbacks
 
+You can specify callbacks for every load.js call:
 
-You can make it even more sophisticated:
+	load('main', function() {
+	
+	    // main.js is loaded
+	
+	});
 
-	load(['a', 'b'], ['c', 'd'], 'e')
+Full example:
 
-That means load A and B, then load C and D, and only after that load E.
+	load
+	.css('general', 'custom')
+	.js(['main', 'module'], 'plugin', function() {
+	
+	    // here you can run your app
+	
+	});
+
+Also there is general callback for all loadings called "ready". It has an argument with loaded file's path:
+
+	load.ready = function(path) {
+	
+	    // when main.js is loaded, path contains "main", as it was called
+	    // when general.css is loaded, path contains "general.css"
+	
+	};
+	load('main');
+	load('general.css');
 
 
 ### Sync & Async
 
-By default, async loading is used, but if you need to load scripts in synchronous way - that's no problem at all.
+By default async loading is used, but if you want to load scripts in good old synchronous way - that's no problem at all.
 
-	load.sync('a', 'b');
+	load.sync('main', 'module');
 
-In this case browser will load b.js only after a.js is loaded, that is usually much slower than async loading.
-
+In this case browser will load module.js only after main.js is loaded, that's usually slower and freezing than async loading.
 
 Also you can use "async" method for code to be more obvious:
 
-	load.async('x');
+	load.async('plugin');
 
 
 ### JSONP
@@ -103,10 +135,13 @@ Load.js can also perform JSONP calls for you:
 
 	load.jsonp(path, callback, async);
 
-Path must contain callback variable like "cb=?", for example below
-callback is passed via "cb" parameter, its name depends on the server-side you use:
+Path must contain callback parameter with value of "?", like "callback=?".
 
-	load.jsonp('http://example.com/api/getUser?id=123&cb=?', callback);
+For example, below callback is passed via "cb" parameter, this name depends on the server-side you use:
+
+	load.jsonp('http://example.com/api/getUser?id=123&cb=?', function(data) { ... });
+
+Set third parameter to "false" if you want to use synchronous loading.
 
 
 ### AJAX
@@ -115,8 +150,70 @@ Another useful thing is a possibility to make cross-browser AJAX calls via class
 
 	load.ajax(path, callback, async);
 
-Callback is called inside the XHR scope and has one agrument "data" which is "responseText" indeed.
+Callback is called inside the XHR scope and has one agrument "data" which is "XHR.responseText" indeed.
+
+Set third parameter to "false" if you want to use synchronous loading.
 
 
+## API
 
-Detail API description is coming...
+In general, load.js supports two types of input: "options" object and arguments list.
+
+Options:
+
+	load ( options )
+	
+		options is an object:
+		{
+			_string_ or _array_ url		one url or a few urls in an array, required
+			_function_ callback			function to call after loading of all urls
+			_boolean_ async				use async loading, "true" by default
+			_string_ type				request type: "css", "jsonp" or "js" by default
+		}
+		
+Arguments:
+	
+	load ( url [, url] … [, callback] )
+	
+		_string_ or _array_ url		one url or a few urls in an array, required
+		_function_ callback			function to call after loading of all urls
+
+There are few methods used as alias for "load" but with some options.
+
+loading js files:
+
+	load.js ( options )
+	load.js ( url [, url] … [, callback] )
+	
+loading css files:
+
+	load.css ( options )
+	load.css ( url [, url] … [, callback] )
+
+loading js files synchronously:
+
+	load.sync ( options )
+	load.sync ( url [, url] … [, callback] )
+	
+loading js files asynchronously:
+
+	load.async ( options )
+	load.async ( url [, url] … [, callback] )
+	
+JSONP and AJAX calls can be performed only one by one for now, so array cannot be passed as url.
+
+	load.jsonp ( url [, callback] [, async] )
+
+	load.ajax ( url [, callback] [, async] )
+
+Callback are called in "load" scope, except for AJAX where they called in "XMLHttpRequest" scope in order to access it through "this" from callback function.
+
+All methods return "load" object in order to support methods chaining.
+
+Attribute "data-load" is found via "src" attribute of the script tag, using "load.js" as file name.
+
+If you change the file name from "load.js" to another, or if you include "load.js" code into another file, then "data-load" attribute will not be found and thus loaded.
+
+To handle that you can use an "id" attribute for the script tag with value "load.js", then "data-load" will be found via "id" attribute:
+
+	<script type="text/javascript" src="some-other-file-including-load.js-code" data-load="app/init" id="load.js"></script>

@@ -1,3 +1,9 @@
+/*
+	Load.js - JavaScript js/css, jsonp/ajax, sync/async loader
+	Docs and source: https://github.com/articobandurini/load.js
+	Distributed under MIT license.
+*/
+
 (function(context){
 	
 	/*
