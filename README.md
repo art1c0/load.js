@@ -2,13 +2,15 @@
 
 JavaScript js/css, jsonp/ajax, sync/async loader
 
-This lib gives you full control on loading scripts and css files for your web application. Instead of having bunches of "script" and "link" tags in your HTML page, you define them all in one place.
+This lib gives you full control over loading scripts and css files for your web application. Instead of having bunches of "script" and "link" tags in your HTML page, you define them all in one place.
 
 Another advantage is asynchronous loading, that means your scripts can be loaded in parallel, and also your app will not freeze while loading them.
 
 To gain even more control, define which scripts should be loaded before others in order to fulfill dependencies - this part is done in a really smart and easy way.
 
-Just include load.js script into your page to get started. Below you will find examples of usage as well as full API.
+Just include load.js script into your page to get started.
+
+Below you will find examples of usage as well as full API.
 
 
 ## Usage
@@ -216,4 +218,4 @@ If you change the file name from "load.js" to another, or if you include "load.j
 
 To handle that you can use an "id" attribute for the script tag with value "load.js", then "data-load" will be found via "id" attribute:
 
-	<script type="text/javascript" src="some-other-file-including-load.js-code" data-load="app/init" id="load.js"></script>
+	<script type="text/javascript" src="file-with-load.js-code" data-load="app/init" id="load.js"></script>
