@@ -167,18 +167,18 @@ Options:
 	
 		options is an object:
 		{
-			_string_ or _array_ url		one url or a few urls in an array, required
-			_function_ callback			function to call after loading of all urls
-			_boolean_ async				use async loading, "true" by default
-			_string_ type				request type: "css", "jsonp" or "js" by default
+			url			string or array		one url or a few urls in an array, required
+			callback	function			function to call after loading of all urls
+			async		boolean				use async loading, "true" by default
+			type		string 				request type: "css", "jsonp" or "js" by default
 		}
 		
 Arguments:
 	
 	load ( url [, url] … [, callback] )
 	
-		_string_ or _array_ url		one url or a few urls in an array, required
-		_function_ callback			function to call after loading of all urls
+			url			string or array		one url or a few urls in an array, required
+			callback	function			function to call after loading of all urls
 
 There are few methods used as alias for "load" but with some options.
 
@@ -206,16 +206,22 @@ JSONP and AJAX calls can be performed only one by one for now, so array cannot b
 
 	load.jsonp ( url [, callback] [, async] )
 
+
+
 	load.ajax ( url [, callback] [, async] )
+
 
 Callback are called in "load" scope, except for AJAX where they called in "XMLHttpRequest" scope in order to access it through "this" from callback function.
 
 All methods return "load" object in order to support methods chaining.
 
+
+### Attribute "data-load"
+
 Attribute "data-load" is found via "src" attribute of the script tag, using "load.js" as file name.
 
 If you change the file name from "load.js" to another, or if you include "load.js" code into another file, then "data-load" attribute will not be found and thus loaded.
 
-To handle that you can use an "id" attribute for the script tag with value "load.js", then "data-load" will be found via "id" attribute:
+To handle that you can use an "id" attribute for the script tag with value "load.js", then "data-load" will be found using "id" attribute:
 
 	<script type="text/javascript" src="file-with-load.js-code" data-load="app/init" id="load.js"></script>
