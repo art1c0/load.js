@@ -202,14 +202,15 @@ loading js files asynchronously:
 	load.async ( options )
 	load.async ( url [, url] … [, callback] )
 	
-JSONP and AJAX calls can be performed only one by one for now, so array cannot be passed as url.
+JSONP
 
 	load.jsonp ( url [, callback] [, async] )
 
-
+AJAX
 
 	load.ajax ( url [, callback] [, async] )
 
+JSONP and AJAX calls can be performed only one by one for now, so array cannot be passed as url.
 
 Callback are called in "load" scope, except for AJAX where they called in "XMLHttpRequest" scope in order to access it through "this" from callback function.
 
