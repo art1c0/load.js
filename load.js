@@ -233,7 +233,7 @@
 		self.root = '';
 		var scriptTags = document.getElementsByTagName('script'), dataLoad, slashIndex;
 		for (var i=0; i<scriptTags.length; i++) {
-			if (scriptTags[i].src.match(/(^|\/)load(\.min)?\.js$/)) {
+			if (scriptTags[i].src.match(/(^|\/)load(\.min)?\.js$/) || scriptTags[i].id === 'load.js') {
 				dataLoad = scriptTags[i].getAttribute('data-load');
 				if (dataLoad) {
 					slashIndex = dataLoad.lastIndexOf('/') + 1;
