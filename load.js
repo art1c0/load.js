@@ -112,6 +112,11 @@
 				receive(this);
 			};
 		}
+		if (typeof options.errorHandler === 'function') {
+			tag.onerror = function(e) {
+				options.errorHandler.call(self, e);
+			};
+		}
 		return self;
 	};
 	
@@ -158,7 +163,7 @@
 	/*
 		jsonp
 	*/
-	self.jsonp = function(url, callback, async) {
+	self.jsonp = function(url, callback, async, errorHandler) {
 		if (typeof callback === 'function') {
 			if (!self.jsonp.index) {
 				self.jsonp.index = 1;
@@ -172,7 +177,8 @@
 		return self.one({
 			url: url,
 			async: async !== false,
-			type: 'jsonp'
+			type: 'jsonp',
+			errorHandler: errorHandler
 		});
 	};
 	
@@ -180,7 +186,7 @@
 	/*
 		ajax
 	*/
-	self.ajax = function(url, callback, async) {
+	self.ajax = function(url, callback, async, errorHandler) {
 		var xhr;
 		if (window.XMLHttpRequest) {
 			xhr = new XMLHttpRequest();
@@ -200,6 +206,11 @@
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4 && typeof callback === 'function') callback.call(xhr, xhr.responseText);
 		};
+		if (typeof errorHandler === 'function') {
+			xhr.onerror = function(e) {
+				errorHandler.call(self, e);
+			};
+		}
 		xhr.open('GET', self.path(url), async);
 		xhr.send();
 		return self;
