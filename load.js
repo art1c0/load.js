@@ -100,7 +100,8 @@
 				tag.parentNode.removeChild(tag);
 			}
 		};
-		if (navigator.userAgent.indexOf('MSIE') >= 0) {
+		var ie = navigator.userAgent.match(/MSIE\s(\d+)/);
+		if (ie && ie[1] < 11) {
 			tag.onreadystatechange = function() {
 				if (this.readyState === 'loaded' || this.readyState === 'complete') {
 					receive(this);
