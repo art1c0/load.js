@@ -75,8 +75,12 @@
 		one
 	*/
 	self.one = function(options) {
-		var tag, css = false,
+		var tag,
+			css = false,
 			holder = document.getElementsByTagName('head')[0] || document.body;
+		if (options.url in self.map) {
+			options.url = self.map[options.url];
+		}
 		if (options.type === 'css' || options.url.toLowerCase().match(/\.css$/)) {
 			css = true;
 			tag = document.createElement('link');
@@ -219,6 +223,29 @@
 	
 	
 	/*
+		min
+	*/
+	self.min = function(input) {
+		if (input && typeof input === 'string') {
+			input = [input];
+		}
+		if (input instanceof Array) {
+			for (var i=0; i<input.length; i++) {
+				var min = '', regex = /\.(js|css)$/i;
+				if (input[i].match(regex)) {
+					min = input[i].replace(regex, function(match, ext, offset, original) {return '.min.' + ext;});
+				}
+				else {
+					min = input[i] + '.min';
+				}
+				self.map[input[i]] = min;
+			}
+		}
+		return self;
+	};
+	
+	
+	/*
 		args
 	*/
 	self.args = function(input) {
@@ -243,6 +270,7 @@
 	*/
 	self.init = function() {
 		self.root = '';
+		self.map = {};
 		var scriptTags = document.getElementsByTagName('script'), dataLoad, slashIndex;
 		for (var i=0; i<scriptTags.length; i++) {
 			if (scriptTags[i].src.match(/(^|\/)load(\.min)?\.js$/) || scriptTags[i].id === 'load.js') {
