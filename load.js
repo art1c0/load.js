@@ -225,11 +225,11 @@
 	/*
 		min
 	*/
-	self.min = function(input) {
+	self.min = function(input, validator) {
 		if (input && typeof input === 'string') {
 			input = [input];
 		}
-		if (input instanceof Array) {
+		if ((input instanceof Array) && (typeof validator === 'function' ? validator.call(self) : true)) {
 			for (var i=0; i<input.length; i++) {
 				var min = '', regex = /\.(js|css)$/i;
 				if (input[i].match(regex)) {
