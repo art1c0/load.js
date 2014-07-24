@@ -42,29 +42,25 @@ Then inside init.js you would load all other scripts and CSS files that you need
 
 	load.js('main.js');
 
-You can omit ".js" at the end:
-
-	load.js('main');
-
 You can use shorthand to make it even more neat:
 
-	load('main');
+	load('main.js');
 
 Methods chaining:
 
-	load.js('main').js('module');
+	load.js('main.js').js('module.js');
 
 The same as:
 
-	load('main', 'module');
+	load('main.js', 'module.js');
 
 Load CSS files (general.css and custom.css):
 
-	load.css('general.css').css('custom');
+	load.css('general.css').css('custom.css');
 
 Load all together:
 
-	load.js('main', 'module').css('general', 'custom');
+	load.js('main.js', 'module.js').css('general.css', 'custom.css');
 
 
 ### Priority loading
@@ -73,13 +69,13 @@ Examples above will not probably work if some of your scripts have to be loaded 
 
 For example, you need to have "main.js" and "module.js" loaded in order to load "plugin.js". This is easy to do with load.js - just put priority scripts into an array:
 
-	load(['main', 'module'], 'plugin');
+	load(['main.js', 'module.js'], 'plugin.js');
 
 In this case "plugin.js" will be loaded only after "main.js" and "module.js" are loaded.
 
 You can make it even more sophisticated, imagine you have to load module.js only after main.js:
 
-	load(['main'], ['module'], 'plugin')
+	load(['main.js'], ['module.js'], 'plugin.js')
 
 That means load "main.js", then load "module.js", and only after that load "plugin.js".
 
@@ -90,7 +86,7 @@ You don't need to use priority loading for css files, just define them in desire
 
 You can specify callbacks for every load.js call:
 
-	load('main', function() {
+	load('main.js', function() {
 	
 	    // main.js is loaded
 	
@@ -99,8 +95,8 @@ You can specify callbacks for every load.js call:
 Full example:
 
 	load
-	.css('general', 'custom')
-	.js(['main', 'module'], 'plugin', function() {
+	.css('general.css', 'custom.css')
+	.js(['main.js', 'module.js'], 'plugin.js', function() {
 	
 	    // here you can run your app
 	
@@ -114,7 +110,7 @@ Also there is general callback for all loadings called "ready". It has an argume
 	    // when general.css is loaded, path contains "general.css"
 	
 	};
-	load('main');
+	load('main.js');
 	load('general.css');
 
 
@@ -122,13 +118,13 @@ Also there is general callback for all loadings called "ready". It has an argume
 
 By default async loading is used, but if you want to load scripts in good old synchronous way - that's no problem at all.
 
-	load.sync('main', 'module');
+	load.sync('main.js', 'module.js');
 
 In this case browser will load module.js only after main.js is loaded, that's usually slower and freezing than async loading.
 
 Also you can use "async" method for code to be more obvious:
 
-	load.async('plugin');
+	load.async('plugin.js');
 
 
 ### JSONP
