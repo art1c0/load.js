@@ -32,7 +32,7 @@ So here you have "load.js" in the root, as well as "app" folder, inside it there
 
 In order to get started, include "load.js" script into your page, please note special "data-load" attribute:
 
-	<script type="text/javascript" src="load.js" data-load="app/init"></script>
+	<script type="text/javascript" src="load.js" data-load="app/init.js"></script>
 
 This will automatically load "app/init.js" file, which will be used to load all other assets.
 
@@ -221,4 +221,4 @@ If you change the file name from "load.js" to another, or if you include "load.j
 
 To handle that you can use an "id" attribute for the script tag with value "load.js", then "data-load" will be found using "id" attribute:
 
-	<script type="text/javascript" src="file-with-load.js-code" data-load="app/init" id="load.js"></script>
+	<script type="text/javascript" src="file-with-load.js-code" data-load="app/init.js" id="load.js"></script>
